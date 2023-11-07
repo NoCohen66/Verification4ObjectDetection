@@ -3,6 +3,8 @@ from iou_calculator.Hyperrectangle import Hyperrectangle
 from iou_calculator.Hyperrectangle_interval import Hyperrectangle_interval
 import pandas as pd
 import plotly.graph_objects as go
+from IPython.display import display
+import time
 
 
 class IoU:
@@ -103,6 +105,7 @@ class IoU:
         return(rect_choose)
 
     def optim_rec(self):
+
         if self.df["is_inside_max_area"].sum() == 0:
             raise ValueError("There is no overlap between the two rectangles.") 
         else: 
@@ -233,24 +236,27 @@ class IoU:
         
         return(A_p + A_gt - A_overlap)
 
-    def iou_optim(self, display = False):
+    def iou_optim_max(self, display = False):
         # optim IBP
         A_gt  = self.hyperrect.area()
-        A_overlap_optim = self.hyperrect.overlap(self.optim_rec())
-        A_p_optim = self.optim_rec().area()
+        optim_rec = self.optim_rec()
+        A_overlap_optim = self.hyperrect.overlap(optim_rec)
+        A_p_optim = optim_rec.area()
         A_union_optim = A_p_optim + A_gt - A_overlap_optim
         IoU_optim = A_overlap_optim/A_union_optim
 
-        dict_iou_optim = {"A_gt":A_gt, 
+        
+        if display == False: 
+            return(IoU_optim)
+        elif display == True: 
+            for key, values in dict_iou_optim.items(): 
+                print(key, values)
+        else: 
+            dict_iou_optim = {"A_gt":A_gt, 
                 "A_overlap": A_overlap_optim,
                 "A_p":A_p_optim, 
                 "A_union":A_union_optim, 
                 "IoU":IoU_optim}
-
-        if display == True: 
-            for key, values in dict_iou_optim.items(): 
-                print(key, values)
-        else: 
             return(dict_iou_optim)
 
     def contains_gt_list(self, interval, value):
@@ -261,7 +267,7 @@ class IoU:
             return([interval.l, interval.u])
 
 
-    def iou_optim_min(self, returnDf = False):
+    def iou_optim_greedy(self, returnDf = False):
         A_gt  = self.hyperrect.area()
         
         # Points for hyperrect_interval (predicted) that fit with latex description
@@ -310,6 +316,56 @@ class IoU:
             return(df)
 
 
+    def iou_optim(self, returnDf = False):
+            A_gt  = self.hyperrect.area()
+            
+            # Points for hyperrect_interval (predicted) that fit with latex description
+            x_1_p = self.hyperrect_interval.x_1
+            x_2_p = self.hyperrect_interval.x_2
+            y_1_p = self.hyperrect_interval.y_1
+            y_2_p = self.hyperrect_interval.y_2
+
+            # Points for hyperrect_2 (ground truth) that fit with latex description
+            x_1_gt = self.hyperrect.x_bl
+            x_2_gt = self.hyperrect.x_tr
+            y_1_gt = self.hyperrect.y_bl
+            y_2_gt = self.hyperrect.y_tr
+
+            dico_mins = {"x_bl":[], "x_tr":[], "y_bl": [], "y_tr":[], "overlap": [], "iou":[]}
+
+
+
+        
+            for x_1_p_i in [x_1_p.l, x_1_p.u]:
+                for y_1_p_i in [y_1_p.l, y_1_p.u]:
+                    for x_2_p_i in [x_2_p.l, x_2_p.u]:
+                        for y_2_p_i in [y_2_p.l, y_2_p.u]:
+                            #print(x_1_p_i, y_1_p_i, x_2_p_i, y_2_p_i)
+                            dico_mins["x_bl"].append(x_1_p_i)
+                            dico_mins["y_bl"].append(y_1_p_i)
+                            dico_mins["x_tr"].append(x_2_p_i)
+                            dico_mins["y_tr"].append(y_2_p_i)
+                            hyp = Hyperrectangle(x_bl=x_1_p_i,
+                                                        x_tr=x_2_p_i, 
+                                                        y_bl=y_1_p_i, 
+                                                        y_tr=y_2_p_i)
+                            
+                            A_p = hyp.area()
+                     
+                            A_overlap = self.hyperrect.overlap(hyp)
+                            dico_mins["overlap"].append(A_overlap)
+                            A_union = A_p + A_gt - A_overlap
+                            dico_mins["iou"].append(A_overlap/A_union)
+
+            
+            df = pd.DataFrame(dico_mins)
+
+            if returnDf == False: 
+                return([df.describe()["iou"]["min"], self.iou_optim_max(display = False)])
+            else: 
+                return(df)
+
+
     def iou_reluval(self, display = False):
         """
         Definition of the Intersection over Union (IoU): 
@@ -333,36 +389,49 @@ class IoU:
         A_overlap_reluval = self.overlap_reluval()
         IoU_vanilla_reluval = A_overlap_reluval * A_union_reciprocal_reluval
 
-        dict_iou_reluval = {"A_gt": self.hyperrect.area(),
-        "A_union": A_union_reluval.aslist(),
-        "1/A_union": A_union_reluval.reciprocal_positive().aslist(),
-        "A_overlap":A_overlap_reluval.aslist(), 
-        "A_p":self.hyperrect_interval.area().aslist() , 
-        "IoU":IoU_vanilla_reluval}
 
         if display == True: 
+            dict_iou_reluval = {"A_gt": self.hyperrect.area(),
+                                "A_union": A_union_reluval.aslist(),
+                                "1/A_union": A_union_reluval.reciprocal_positive().aslist(),
+                                "A_overlap":A_overlap_reluval.aslist(), 
+                                "A_p":self.hyperrect_interval.area().aslist() , 
+                                "IoU":IoU_vanilla_reluval}
             for key, values in dict_iou_reluval.items(): 
                 if key != "IoU":
                     print(key, values)
                 else:
                     print(key, values.aslist())
+        if IoU_vanilla_reluval.aslist()[1] > 1:
+            return([IoU_vanilla_reluval.aslist()[0], 1])
         else: 
-            return(dict_iou_reluval)
+            return(IoU_vanilla_reluval.aslist())
 
 
         
 
     def iou(self, display = False):
+        start_vanilla =  time.time()
+        vanilla = self.iou_reluval()
+        end_vanilla = time.time()
 
-        dict_iou = { "IoU_vanilla_reluval":self.iou_reluval()["IoU"],
-                "IoU_optim":self.iou_optim()["IoU"], "IoU_optim_2":self.iou_optim_min()}
+        start_extension = time.time()
+        extension = self.iou_optim()
+        end_extension = time.time() 
+
+        start_greedy = time.time()
+        extension_greedy = self.iou_optim_greedy()
+        end_greedy = time.time()
+        dict_iou = { "IoU_vanilla":vanilla,
+                     "tmps_vanilla": end_vanilla-start_vanilla,
+                     "IoU_extension":extension,
+                     "tmps_extension":end_extension-start_extension,
+                     "IoU_extension_greedy":extension_greedy,
+                     "tmps_greedy":end_greedy-start_greedy}
 
         if display == True: 
             for key, values in dict_iou.items(): 
-                if key != "IoU_vanilla_reluval":
                     print(key, values)
-                else:
-                    print(key, values.aslist())
         else:
             return(dict_iou)
 
@@ -381,29 +450,4 @@ class IoU:
                 + self.hyperrect.plot(returnV=True, name="ground_truth").data)
         fig.show()
         
-
-def print_results(x_1=Interval(0,1), x_2=Interval(10,11), y_1=Interval(0,1), y_2=Interval(10,11), x_bl=0.5,x_tr=9.5, y_bl=0.5, y_tr=10.5):
-    try:
-        hyperrect_interval = Hyperrectangle_interval(x_1=x_1, x_2=x_2, y_1=y_1, y_2=y_2)
-        hyperrect = Hyperrectangle(x_bl=x_bl,x_tr=x_tr, y_bl=y_bl, y_tr=y_tr)
-        intersection = IoU(hyperrect_interval, hyperrect)
-        intersection.plot()
-        iou = intersection.iou()
-        if not iou['IoU_vanilla_reluval'].contains(iou['IoU_optim']):
-            raise ValueError("Optimized IoU should be included in vanilla IoU.")
-            
-        print("--------------- results ⧉---------------")
-        intersection.iou(display = True)
-
-
-        print("--------------- reluval method 📸 ---------------")
-        intersection.iou_reluval(display = True)
-
-        print("--------------- optimized method 📸 ---------------")
-        intersection.iou_optim(display = True)
-    
-
-    
-    except ValueError as e:
-        print(e)
 
