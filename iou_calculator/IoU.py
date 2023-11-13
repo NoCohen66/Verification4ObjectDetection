@@ -419,15 +419,11 @@ class IoU:
         extension = self.iou_optim()
         end_extension = time.time() 
 
-        start_greedy = time.time()
-        extension_greedy = self.iou_optim_greedy()
-        end_greedy = time.time()
+
         dict_iou = { "IoU_vanilla":vanilla,
                      "tmps_vanilla": end_vanilla-start_vanilla,
                      "IoU_extension":extension,
-                     "tmps_extension":end_extension-start_extension,
-                     "IoU_extension_greedy":extension_greedy,
-                     "tmps_greedy":end_greedy-start_greedy}
+                     "tmps_extension":end_extension-start_extension}
 
         if display == True: 
             for key, values in dict_iou.items(): 

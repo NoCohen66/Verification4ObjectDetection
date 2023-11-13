@@ -15,13 +15,17 @@ class Hyperrectangle:
         y_bl: (float) bottom left point projected on the y_axis
         """
         
-        if x_tr >= x_bl and y_tr >= y_bl:
+        if not x_tr >= x_bl:
+            raise ValueError("On x: The upper bounds must be greater or equal to the lower bounds")
+        elif not y_tr >= y_bl:
+            raise ValueError("On y: The upper bounds must be greater or equal to the lower bounds")
+        else:
             self.x_tr = x_tr
             self.x_bl = x_bl
             self.y_tr = y_tr
             self.y_bl = y_bl
-        else:
-            raise ValueError("The upper bounds must be greater or equal to the lower bounds")
+  
+            
     
     def print_(self):
         print(f"x_tr: {self.x_tr}, x_bl: {self.x_bl}, y_tr: {self.y_tr}, y_bl: {self.y_tr}")
