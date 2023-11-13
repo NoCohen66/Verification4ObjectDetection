@@ -5,7 +5,7 @@ from iou_calculator.Hyperrectangle_interval import Hyperrectangle_interval
 from iou_calculator.Hyperrectangle import Hyperrectangle
 from iou_calculator.Interval import Interval
 from iou_calculator.IoU import IoU
-from iou_calculator.utils import Merge, show_im, show_im_origin, check_box
+from iou_calculator.utils import Merge, show_im, show_im_origin, check_box, clip_corner
 from IPython.display import display
 
 
@@ -50,7 +50,11 @@ for image_id in range(1000):
     for i in range(len(eps_list)):
         st_computed_ious = time.time()
         lb_box, ub_box, lb_adv, ub_adv = bound_whitenoise(model_box, model_digit, X, eps_list[i])
-        #show_im_origin(X, f"images/{i}_{eps_list[i]}.png", gt_box, lb_box, ub_box)
+        for corner in lb_box: 
+            corner = clip_corner(corner)
+        for corner in ub_box:
+            corner = clip_corner(corner)
+        end_perturbation = time.time()
         if check_box(lb_box) and check_box(ub_box):
             try:
                 ground_truth_box = Hyperrectangle(x_bl=gt_box[0],x_tr=gt_box[2], y_bl=gt_box[1], y_tr=gt_box[3])
@@ -58,9 +62,10 @@ for image_id in range(1000):
                 dict_iou = IoU(predicted_box, ground_truth_box).iou(display = False)
                 et_computed_ious = time.time()
                 list_info.append(Merge({"image_id":image_id, 
+                                    "gt_logit": gt_logit,
                                     "eps":eps_list[i], 
-                                    "IoU_vanilla"
                                     "perturbation":"whitenoise", 
+                                    "elapsed_time_perturbation":st_computed_ious-end_perturbation,
                                     "elapsed_time_eps_computed_ious" : et_computed_ious - st_computed_ious }, dict_iou))
             except ValueError as e:
                 print(e)

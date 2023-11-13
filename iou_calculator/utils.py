@@ -1,5 +1,18 @@
 import plotly.graph_objects as go
 from PIL import Image, ImageDraw
+
+
+def clip_corner(corner):
+    """
+    Be careful this is adapted to MNIST dataset !
+    """
+    if corner<0:
+        return(0)
+    elif corner>90:
+        return(90)
+    else:
+        return(corner)
+    
 def Merge(dict1, dict2): 
     res = dict1 | dict2
     return res
