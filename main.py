@@ -37,7 +37,7 @@ list_info_time = []
 eps_list = [0.005*i for i in range(0, 11)]
 
 
-for image_id in range(10):
+for image_id in range(14000):
     list_info = []
     print(f"Begin to work with image {image_id}")
     st_im = time.time()
