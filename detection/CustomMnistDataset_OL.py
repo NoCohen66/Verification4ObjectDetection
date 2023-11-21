@@ -12,11 +12,13 @@ class CustomMnistDataset_OL(Dataset):
         '''
         self.df = df
         self.test = test
+        print(df.shape)
     
     def __len__(self):
         return len(self.df)
     
     def __getitem__(self, idx):
+
         #img into 28x28 array
         if self.test:
             image = np.reshape(np.array(self.df.iloc[idx,:]), (28,28)) / 255.

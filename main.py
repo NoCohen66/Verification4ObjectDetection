@@ -27,21 +27,24 @@ model_torch_load  = torch.jit.load(f'{filename}.pt')
 model_box = NeuralNetwork_OL_v2(classif=False)
 model_box.load_state_dict(model_torch_load.state_dict())
 
-train_df = pd.read_csv("detection/MNIST/train.csv")
-trainingData = CustomMnistDataset_OL(train_df)
-train_dataloader = DataLoader(trainingData, batch_size=1, shuffle=True)
-train_iterator = iter(train_dataloader)
+test_df = pd.read_csv("detection/MNIST/test.csv")
+testinggData = CustomMnistDataset_OL(test_df, test=True)
 
-print(len(train_dataloader))
+test_dataloader = DataLoader(testinggData, batch_size=1, shuffle=False)
+test_iterator = iter(test_dataloader)
+
+print("Let's apply it to test dataset:", len(test_dataloader))
+
 list_info_time = []
 eps_list = [0.005*i for i in range(0, 11)]
 
 
-for image_id in range(14000):
+for image_id in range(27000):
+
     list_info = []
     print(f"Begin to work with image {image_id}")
     st_im = time.time()
-    data = next(train_iterator)
+    data = next(test_iterator)
     X, y = data
     gt_logit, gt_box = y
     gt_box = gt_box.detach().numpy()[0]
@@ -83,8 +86,8 @@ for image_id in range(14000):
     print(f"Time to proceed one image {et_im-st_im}")
     list_info_time.append((image_id, et_im-st_im))
     df = pd.DataFrame(list_info)
-    df.to_csv(f"results/second_experiments/{image_id}_iou_calculations.csv")
+    df.to_csv(f"results/true_experiments/{image_id}_iou_calculations.csv")
   
 
-pd.DataFrame(list_info_time).to_csv("results/second_experiments/times.csv")
+pd.DataFrame(list_info_time).to_csv("results/true_experiments/times2.csv")
 
