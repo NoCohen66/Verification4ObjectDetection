@@ -37,17 +37,17 @@ model_corners.load_state_dict(corner_config)
 test_df = pd.read_csv("detection/MNIST/test.csv")
 testinggData = CustomMnistDataset_OL(test_df, test=True)
 
-test_dataloader = DataLoader(testinggData, batch_size=1, shuffle=False)
+test_dataloader = DataLoader(testinggData, batch_size=1, shuffle=True)
 test_iterator = iter(test_dataloader)
 
 print("Let's apply it to test dataset:", len(test_dataloader))
 
 list_info_time = []
 images_exp = []
-eps_list = np.linspace(0, 0.00560,100)
+eps_list = np.linspace(0, 0.00560,101)
 
 
-for image_id in range(3):
+for image_id in range(100):
     list_info = []
     print(f"Begin to work with image {image_id}")
     st_im = time.time()
@@ -103,9 +103,9 @@ for image_id in range(3):
     list_info_time.append((image_id, et_im-st_im))
     images_exp.append(X[0,0,:,:].flatten().tolist())
     df = pd.DataFrame(list_info)
-    df.to_csv(f"results/many_perturbations/{image_id}_iou_calculations.csv")
+    df.to_csv(f"results/many_exp_true/{image_id}_iou_calculations.csv")
   
 
-pd.DataFrame(list_info_time).to_csv("results/many_perturbations/times2.csv")
-pd.DataFrame(images_exp).to_csv("results/many_perturbations/images.csv")
+pd.DataFrame(list_info_time).to_csv("results/many_exp_true/times2.csv")
+pd.DataFrame(images_exp).to_csv("results/many_exp_true/images.csv")
 

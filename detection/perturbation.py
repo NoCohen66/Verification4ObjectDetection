@@ -46,11 +46,11 @@ def bound_brightness(model_corners, X, brightness_variations):
     return lb_brightness.detach().numpy()[0], ub_brightness.detach().numpy()[0]
 
 def bound_contrast(model_corners, X, brightness_variations):
-    tensor_init_brightness = torch.tensor([[1.0]]).float().to('cpu')
+    tensor_init_contrast = torch.tensor([[1.0]]).float().to('cpu')
     set_contrast(model_corners, X)
-    model_lirpa_corners = BoundedModule(model_corners, tensor_init_brightness)
+    model_lirpa_corners = BoundedModule(model_corners, tensor_init_contrast)
     ptb_brightness = PerturbationLpNorm(norm=np.inf, eps=brightness_variations) 
-    input_lirpa_brightness = BoundedTensor(tensor_init_brightness, ptb_brightness)
+    input_lirpa_brightness = BoundedTensor(tensor_init_contrast, ptb_brightness)
     lb_brightness, ub_brightness = model_lirpa_corners.compute_bounds(x=(input_lirpa_brightness,),
                                                         IBP=True, method='crown')
     return lb_brightness.detach().numpy()[0], ub_brightness.detach().numpy()[0]
