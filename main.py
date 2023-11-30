@@ -34,6 +34,12 @@ corner_config['linear_perturbation.weight']=torch.Tensor(np.zeros((90*90, 1), dt
 corner_config['linear_perturbation.bias']=torch.Tensor(np.zeros((90*90,), dtype='float32'))
 model_corners.load_state_dict(corner_config)
 
+model_corners_contrast = NeuralNetwork_BrightnessContrast(classif=False)
+corner_config_contrast = model_torch_load.state_dict()
+corner_config_contrast['linear_perturbation.weight']=torch.Tensor(np.zeros((90*90, 1), dtype='float32'))
+corner_config_contrast['linear_perturbation.bias']=torch.Tensor(np.zeros((90*90,), dtype='float32'))
+model_corners_contrast.load_state_dict(corner_config_contrast)
+
 test_df = pd.read_csv("detection/MNIST/test.csv")
 testinggData = CustomMnistDataset_OL(test_df, test=True)
 
@@ -47,7 +53,7 @@ images_exp = []
 eps_list = np.linspace(0, 0.00560,101)
 
 
-for image_id in range(100):
+for image_id in range(3):
     list_info = []
     print(f"Begin to work with image {image_id}")
     st_im = time.time()
@@ -60,7 +66,7 @@ for image_id in range(100):
         start_perturbation = time.time() 
         lb_box_wn, ub_box_wn = bound_whitenoise(model_box, X, eps_list[i])
         lb_box_bri, ub_box_bri = bound_brightness(model_corners, X, eps_list[i])
-        lb_box_contr, ub_box_contr = bound_contrast(model_corners, X, eps_list[i])
+        lb_box_contr, ub_box_contr = bound_contrast(model_corners_contrast, X, eps_list[i])
         end_perturbation = time.time()
         st_computed_ious = time.time()
         ground_truth_box = Hyperrectangle(x_bl=gt_box[0],x_tr=gt_box[2], y_bl=gt_box[1], y_tr=gt_box[3])
@@ -103,9 +109,9 @@ for image_id in range(100):
     list_info_time.append((image_id, et_im-st_im))
     images_exp.append(X[0,0,:,:].flatten().tolist())
     df = pd.DataFrame(list_info)
-    df.to_csv(f"results/many_exp_true/{image_id}_iou_calculations.csv")
+    df.to_csv(f"results/grr/{image_id}_iou_calculations.csv")
   
 
-pd.DataFrame(list_info_time).to_csv("results/many_exp_true/times2.csv")
-pd.DataFrame(images_exp).to_csv("results/many_exp_true/images.csv")
+pd.DataFrame(list_info_time).to_csv("results/grr/times2.csv")
+pd.DataFrame(images_exp).to_csv("results/grr/images.csv")
 

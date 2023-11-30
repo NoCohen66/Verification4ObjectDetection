@@ -27,11 +27,12 @@ def set_brightness(model, image):
     model.load_state_dict(brightness_config)
 
 def set_contrast(model, image):
+    
     # create a pytorch model for a specific flatten image
     # once a model has been set for one images, you can call it for any contrast value
-    image_flatten = image.view((90*90,))
+    image_flatten = image.view((90*90,1))
     contrast_config = model.state_dict()
-    contrast_config['linear_perturbation.bias']=torch.Tensor(np.zeros((90*90,1), dtype='float32'))
+    contrast_config['linear_perturbation.bias']=torch.Tensor(np.zeros((90*90,), dtype='float32'))
     contrast_config['linear_perturbation.weight']=image_flatten
     model.load_state_dict(contrast_config)
 
