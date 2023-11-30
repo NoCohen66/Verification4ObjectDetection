@@ -1,7 +1,7 @@
 from detection.NeuralNetwork_OL_v2 import NeuralNetwork_OL_v2
 from detection.CustomMnistDataset_OL import CustomMnistDataset_OL
 from detection.NeuralNetwork_BrightnessContrast import NeuralNetwork_BrightnessContrast
-from detection.perturbation import bound_whitenoise, bound_brightness
+from detection.perturbation import bound_whitenoise, bound_brightness, bound_contrast
 from iou_calculator.Hyperrectangle_interval import Hyperrectangle_interval
 from iou_calculator.Hyperrectangle import Hyperrectangle
 from iou_calculator.Interval import Interval
@@ -60,7 +60,7 @@ for image_id in range(100):
         start_perturbation = time.time() 
         lb_box_wn, ub_box_wn = bound_whitenoise(model_box, X, eps_list[i])
         lb_box_bri, ub_box_bri = bound_brightness(model_corners, X, eps_list[i])
-        lb_box_contr, ub_box_contr = bound_brightness(model_corners, X, eps_list[i])
+        lb_box_contr, ub_box_contr = bound_contrast(model_corners, X, eps_list[i])
         end_perturbation = time.time()
         st_computed_ious = time.time()
         ground_truth_box = Hyperrectangle(x_bl=gt_box[0],x_tr=gt_box[2], y_bl=gt_box[1], y_tr=gt_box[3])
