@@ -7,14 +7,13 @@ from torch import nn
 
 
 
-def bound_whitenoise(model_box, X, eps):
+def bound_whitenoise(model_box, X, eps, method='crown'):
     X_lirpa = X.float().to('cpu')
     model_lirpa_corner = BoundedModule(model_box, X_lirpa)
     ptb = PerturbationLpNorm(norm=np.inf, eps=eps)
     input_lirpa = BoundedTensor(X_lirpa, ptb)
-    lb_box, ub_box = model_lirpa_corner.compute_bounds(x=(input_lirpa,),IBP=True, method='crown')
+    lb_box, ub_box = model_lirpa_corner.compute_bounds(x=(input_lirpa,),method=method)
     return lb_box.detach().numpy()[0], ub_box.detach().numpy()[0]
-
 
 
 def set_brightness(model, image):
@@ -36,22 +35,25 @@ def set_contrast(model, image):
     contrast_config['linear_perturbation.weight']=image_flatten
     model.load_state_dict(contrast_config)
 
-def bound_brightness(model_corners, X, brightness_variations):
-    tensor_init_brightness = torch.tensor([[0.0]]).float().to('cpu')
-    set_brightness(model_corners, X)
-    model_lirpa_corners = BoundedModule(model_corners, tensor_init_brightness)
-    ptb_brightness = PerturbationLpNorm(norm=np.inf, eps=brightness_variations) 
-    input_lirpa_brightness = BoundedTensor(tensor_init_brightness, ptb_brightness)
-    lb_brightness, ub_brightness = model_lirpa_corners.compute_bounds(x=(input_lirpa_brightness,),
-                                                        IBP=True, method='crown')
-    return lb_brightness.detach().numpy()[0], ub_brightness.detach().numpy()[0]
 
-def bound_contrast(model_corners, X, brightness_variations):
+
+def bound_contrast(model_corners, X, brightness_variations, method='crown'):
     tensor_init_contrast = torch.tensor([[1.0]]).float().to('cpu')
     set_contrast(model_corners, X)
     model_lirpa_corners = BoundedModule(model_corners, tensor_init_contrast)
     ptb_brightness = PerturbationLpNorm(norm=np.inf, eps=brightness_variations) 
     input_lirpa_brightness = BoundedTensor(tensor_init_contrast, ptb_brightness)
     lb_brightness, ub_brightness = model_lirpa_corners.compute_bounds(x=(input_lirpa_brightness,),
-                                                        IBP=True, method='crown')
+                                                        method=method)
+    return lb_brightness.detach().numpy()[0], ub_brightness.detach().numpy()[0]
+
+def bound_brightness(model_corners, X, eps, method='crown'):
+    tensor_init_brightness = torch.tensor([[0.0]]).float().to('cpu')
+    set_brightness(model_corners, X)
+    model_lirpa_corners = BoundedModule(model_corners, tensor_init_brightness)
+    ptb_brightness = PerturbationLpNorm(norm=np.inf, eps=eps) 
+    input_lirpa_brightness = BoundedTensor(tensor_init_brightness, ptb_brightness)
+    lb_brightness, ub_brightness = model_lirpa_corners.compute_bounds(x=(input_lirpa_brightness,),
+                                                        method=method)
+    # lb_brightness, ub_brightness = model_lirpa_corners.compute_bounds(x=(input_lirpa_brightness,),method='backward')
     return lb_brightness.detach().numpy()[0], ub_brightness.detach().numpy()[0]

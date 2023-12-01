@@ -14,7 +14,7 @@ def clip_corner(corner):
         return(corner)
     
 def Merge(dict1, dict2): 
-    res = dict1 | dict2
+    res = {**dict1, **dict2}
     return res
 
 def show_im(X, name, gt_box):

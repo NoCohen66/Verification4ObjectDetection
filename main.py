@@ -50,10 +50,11 @@ print("Let's apply it to test dataset:", len(test_dataloader))
 
 list_info_time = []
 images_exp = []
-eps_list = np.linspace(0, 0.00560,101)
-
+eps_list = np.linspace(0, 0.002,101)
+eps_list_contrast = np.linspace(0, 0.01,101)
 
 for image_id in range(3):
+    print("image", image_id)
     list_info = []
     print(f"Begin to work with image {image_id}")
     st_im = time.time()
@@ -62,46 +63,51 @@ for image_id in range(3):
     gt_logit, gt_box = y
     gt_box = gt_box.detach().numpy()[0]
 
-    for i in range(len(eps_list)):
-        start_perturbation = time.time() 
-        lb_box_wn, ub_box_wn = bound_whitenoise(model_box, X, eps_list[i])
-        lb_box_bri, ub_box_bri = bound_brightness(model_corners, X, eps_list[i])
-        lb_box_contr, ub_box_contr = bound_contrast(model_corners_contrast, X, eps_list[i])
-        end_perturbation = time.time()
-        st_computed_ious = time.time()
-        ground_truth_box = Hyperrectangle(x_bl=gt_box[0],x_tr=gt_box[2], y_bl=gt_box[1], y_tr=gt_box[3])
+    for method in ['IBP', 'IBP+backward (CROWN-IBP)', 'backward (CROWN)']:
+        print("method", method)
+        for i in range(len(eps_list)):
+            print("variations", eps_list[i])
+            start_perturbation = time.time() 
+            lb_box_wn, ub_box_wn = bound_whitenoise(model_box, X, eps_list[i], method=method.split()[0])
+            lb_box_bri, ub_box_bri = bound_brightness(model_corners, X, eps_list[i], method=method.split()[0])
+            lb_box_contr, ub_box_contr = bound_contrast(model_corners_contrast, X, eps_list_contrast[i], method=method.split()[0])
+            end_perturbation = time.time()
+            st_computed_ious = time.time()
+            ground_truth_box = Hyperrectangle(x_bl=gt_box[0],x_tr=gt_box[2], y_bl=gt_box[1], y_tr=gt_box[3])
 
-        perturbations_dict = {"whitenoise": [lb_box_wn, ub_box_wn],
-                               "brightness":[lb_box_bri, ub_box_bri], 
-                               "contrast":[lb_box_contr, ub_box_contr]}
-        for perturbation_name, bounds in perturbations_dict.items():
-            print("perturbations_dict", perturbation_name, bounds)
-            lb_box, ub_box = bounds[0], bounds[1]
-            lb_box = [clip_corner(corner) for corner in lb_box]
-            ub_box = [clip_corner(corner) for corner in ub_box]
-            try: 
-                predicted_box = Hyperrectangle_interval(x_1=Interval(lb_box[0],ub_box[0]), x_2=Interval(lb_box[2],ub_box[2]), y_1=Interval(lb_box[1],ub_box[1]), y_2=Interval(lb_box[3],ub_box[3]))
-                dict_iou = IoU(predicted_box, ground_truth_box).iou(display = False)
-                fake_iou = False
-            except ValueError as e: 
-                print(e)
-                dict_iou = {"IoU_vanilla":[0,1],
-                        "tmps_vanilla": 0,
-                        "IoU_extension":[0,1],
-                        "tmps_extension":0}
-                fake_iou = True
-            et_computed_ious = time.time()
+            perturbations_dict = {"whitenoise": [lb_box_wn, ub_box_wn],
+                                "brightness":[lb_box_bri, ub_box_bri], 
+                                "contrast":[lb_box_contr, ub_box_contr]}
+            for perturbation_name, bounds in perturbations_dict.items():
+                print("perturbation_name", perturbation_name)
+                lb_box, ub_box = bounds[0], bounds[1]
+                lb_box = [clip_corner(corner) for corner in lb_box]
+                ub_box = [clip_corner(corner) for corner in ub_box]
+                try: 
+                    predicted_box = Hyperrectangle_interval(x_1=Interval(lb_box[0],ub_box[0]), x_2=Interval(lb_box[2],ub_box[2]), y_1=Interval(lb_box[1],ub_box[1]), y_2=Interval(lb_box[3],ub_box[3]))
+                    dict_iou = IoU(predicted_box, ground_truth_box).iou(display = False)
+                    fake_iou = False
+                except ValueError as e: 
+                    print(e)
+                    dict_iou = {"IoU_vanilla":[0,1],
+                            "tmps_vanilla": 0,
+                            "IoU_extension":[0,1],
+                            "tmps_extension":0}
+                    fake_iou = True
+                et_computed_ious = time.time()
+            
+                list_info.append(Merge({"method":method,
+                                    "image_id":image_id, 
+                                    "gt_logit": gt_logit.item(),
+                                    "eps":eps_list[i], 
+                                    "eps_contrast":eps_list_contrast[i],
+                                    "fake_iou": fake_iou,
+                                    "perturbation":perturbation_name, 
+                                    "bounds_clip":[lb_box, ub_box],
+                                    "elapsed_time_perturbation":end_perturbation-start_perturbation,
+                                    "elapsed_time_eps_computed_ious" : et_computed_ious - st_computed_ious }, dict_iou))
+
         
-            list_info.append(Merge({"image_id":image_id, 
-                                "gt_logit": gt_logit.item(),
-                                "eps":eps_list[i], 
-                                "fake_iou": fake_iou,
-                                "perturbation":perturbation_name, 
-                                "bounds_clip":[lb_box, ub_box],
-                                "elapsed_time_perturbation":end_perturbation-start_perturbation,
-                                "elapsed_time_eps_computed_ious" : et_computed_ious - st_computed_ious }, dict_iou))
-
-    
 
  
     et_im = time.time()
@@ -109,9 +115,9 @@ for image_id in range(3):
     list_info_time.append((image_id, et_im-st_im))
     images_exp.append(X[0,0,:,:].flatten().tolist())
     df = pd.DataFrame(list_info)
-    df.to_csv(f"results/grr/{image_id}_iou_calculations.csv")
+    df.to_csv(f"results/many_methods/{image_id}_iou_calculations.csv")
   
 
-pd.DataFrame(list_info_time).to_csv("results/grr/times2.csv")
-pd.DataFrame(images_exp).to_csv("results/grr/images.csv")
+pd.DataFrame(list_info_time).to_csv("results/many_methods/times2.csv")
+pd.DataFrame(images_exp).to_csv("results/many_methods/images.csv")
 
