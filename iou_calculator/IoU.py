@@ -25,6 +25,11 @@ class IoU:
         self.hyperrect_interval = hyperrectangle_interval
         self.hyperrect = hyperrectangle
 
+        print("Type of self.hyperrect", type(self.hyperrect))
+        print("Type of self.hyperrect_interval", type(self.hyperrect_interval))        
+        print("self.hyperrect", self.hyperrect.print_())
+        print("self.hyperrect_interval", self.hyperrect_interval.print_())
+
         if self.hyperrect.area() <= 0:
             raise ValueError("To use IoU method, the ground truth should have a positive (not zero) area.") 
 
