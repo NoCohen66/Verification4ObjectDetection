@@ -1,4 +1,4 @@
-from detection.Neraul_network_LARD import torch_model_seq, torch_model_brightness, Neural_network_LARD, Neural_network_LARD_BrightnessContrast
+from detection.NeuralNetwork_LARD import torch_model_seq, torch_model_brightness, CustomModel, Neural_network_LARD, Neural_network_LARD_BrightnessContrast
 from detection.perturbation import bound_whitenoise, bound_brightness_LARD, bound_contrast
 from iou_calculator.Hyperrectangle_interval import Hyperrectangle_interval
 from iou_calculator.Hyperrectangle import Hyperrectangle
@@ -27,6 +27,23 @@ filename = 'detection/weights/tmp_nfm_v4'
 model_torch_load  = torch.load(f'{filename}.pt', torch.device('cpu')) # change if GPU
 torch_model = torch_model_seq
 torch_model.load_state_dict(model_torch_load.state_dict())
+#torch.Size([1, 3, 256, 256])
+random_tensor = torch.randn(1,3,256,256)
+print("Trying torch_model_seq", torch_model(random_tensor))
+model_LARD= Neural_network_LARD()
+print("Trying Neural_network_LARD", model_LARD(random_tensor))
+
+
+model_bri = CustomModel(torch_model_seq)
+model_bri.linear.weight.data = torch.zeros((3*256*256, 1), dtype=torch.float32)
+model_bri.linear.bias.data = torch.zeros(3*256*256, dtype=torch.float32)
+grr= torch.Tensor([0])
+print(grr.shape)
+output = model_bri(grr)
+print("model_bri",model_bri(grr))
+
+for name, param in model_bri.named_parameters():
+     print(name, param.shape)
 
 '''
 model_corners = torch_model_brightness
@@ -35,15 +52,15 @@ corner_config['linear_perturbation.weight']=torch.Tensor(np.zeros((256*256, 1), 
 corner_config['linear_perturbation.bias']=torch.Tensor(np.zeros((256*256,), dtype='float32'))
 model_corners.load_state_dict(corner_config)
 '''
-
+"""
 new_layer = nn.Linear(1,256*256)
 model_bri = nn.Sequential(new_layer, *torch_model)
 corner_config_bri = model_bri.state_dict()
-corner_config_bri['0.weight']=torch.Tensor(np.zeros((256*256, 1), dtype='float32'))
-corner_config_bri['0.bias']=torch.Tensor(np.zeros((256*256,), dtype='float32'))
+corner_config_bri['0.weight']=torch.Tensor(np.zeros((3*256*256, 1), dtype='float32'))
+corner_config_bri['0.bias']=torch.Tensor(np.zeros((3*256*256,), dtype='float32'))
 model_bri.load_state_dict(corner_config_bri)
-
-model_bri(torch.tensor([[0.0]]))
+"""
+#model_bri(torch.tensor([[0.0]]))
 
 """
 original_state_dict = model_torch_load.state_dict()

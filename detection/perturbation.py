@@ -62,15 +62,14 @@ def bound_brightness(model_corners, X, eps, method='crown'):
 def set_brightness_LARD(model, image):
     # create a pytorch model for a specific flatten image
     # once a model has been set for one images, you can call it for any brightness value
-    print(image.shape)
-    image_flatten = image.mean(dim=1).view((256*256,)) # mean on grey scale :/
+    image_flatten = image.view((3*256*256,)) # mean on grey scale :/
     brightness_config = model.state_dict()
-    brightness_config['0.bias']=image_flatten
-    brightness_config['0.weight']=torch.Tensor(np.ones((256*256,1), dtype='float32'))
+    brightness_config['linear.bias']=image_flatten
+    brightness_config['linear.weight']=torch.Tensor(np.ones((3*256*256,1), dtype='float32'))
     model.load_state_dict(brightness_config)
 
 def bound_brightness_LARD(model_corners, X, eps, method='crown'):
-    tensor_init_brightness = torch.tensor([[0.0]]).float().to('cpu')
+    tensor_init_brightness = torch.tensor([0.0]).float().to('cpu')
     set_brightness_LARD(model_corners, X)
     model_lirpa_corners = BoundedModule(model_corners, tensor_init_brightness)
     ptb_brightness = PerturbationLpNorm(norm=np.inf, eps=eps) 

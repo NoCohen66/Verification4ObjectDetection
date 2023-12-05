@@ -17,6 +17,22 @@ torch_model_seq = nn.Sequential(
     nn.Linear(128,4),
 )
 
+
+class CustomModel(nn.Module):
+    def __init__(self, original_model):
+        super(CustomModel, self).__init__()
+        self.linear = nn.Linear(1, 3*256*256)
+        self.model = original_model
+
+    def forward(self, x):
+        x = self.linear(x)
+        x = x.view(1, 3, 256, 256)  
+        x = self.model(x)
+        return x
+
+
+
+
 torch_model_brightness = nn.Sequential(
     nn.Linear(1,256*256),
     nn.Conv2d(3, 32, kernel_size=(3,3), stride=2, padding=1),
@@ -47,18 +63,31 @@ class Neural_network_LARD(nn.Module):
         self.relu = nn.ReLU()
    
     def forward(self, x):
+        print("first step", x.shape)
         x = self.conv0(x)
+        print("second step", x.shape)
         x =  self.relu(x)
+        print("second step", x.shape)
         x = self.conv2(x)
+        print("second step", x.shape)
         x = self.relu(x)
+        print("second step", x.shape)
         x = self.conv4(x)
+        print("second step", x.shape)
         x = self.relu(x)
+        print("second step", x.shape)
         x = self.flatten(x)
+        print("second step", x.shape)
         x = self.linear7(x)
+        print("second step", x.shape)
         x = self.relu(x)
+        print("second step", x.shape)
         x = self.linear9(x)
+        print("second step", x.shape)
         x = self.relu(x)
+        print("second step", x.shape)
         x = self.linear11(x)
+        print("second step", x.shape)
         return(x)
 
 
