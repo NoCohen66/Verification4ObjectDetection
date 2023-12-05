@@ -32,24 +32,6 @@ class CustomModelLARD(nn.Module):
 
 
 
-
-torch_model_brightness = nn.Sequential(
-    nn.Linear(1,256*256),
-    nn.Conv2d(3, 32, kernel_size=(3,3), stride=2, padding=1),
-    nn.ReLU(),
-    nn.Conv2d(32, 64, kernel_size=(3,3), stride=2, padding=1),
-    nn.ReLU(),
-    nn.Conv2d(64, 128, kernel_size=(3,3), stride=2, padding=1),
-    nn.ReLU(),
-    nn.Flatten(), #131072
-    nn.Linear(131072, 128),
-    nn.ReLU(),
-    nn.Linear(128,128),
-    nn.ReLU(),
-    nn.Linear(128,4),
-)
-
-
 class Neural_network_LARD(nn.Module):
     def __init__(self):
         super(Neural_network_LARD, self).__init__()

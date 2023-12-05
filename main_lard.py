@@ -1,4 +1,4 @@
-from detection.NeuralNetwork_LARD import torch_model_seq, torch_model_brightness, CustomModelLARD, Neural_network_LARD, Neural_network_LARD_BrightnessContrast
+from detection.NeuralNetwork_LARD import Neural_network_LARD, Neural_network_LARD_BrightnessContrast
 from detection.perturbation import bound_whitenoise, bound_brightness_LARD, bound_contrast_LARD
 from iou_calculator.Hyperrectangle_interval import Hyperrectangle_interval
 from iou_calculator.Hyperrectangle import Hyperrectangle
@@ -22,7 +22,6 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 filename = 'detection/weights/tmp_nfm_v4'
 model_torch_load  = torch.load(f'{filename}.pt', torch.device('cpu')) # change if GPU
 torch_model = Neural_network_LARD()
-torch_model_seq.load_state_dict(model_torch_load.state_dict())
 dict_val = {}
 for name, param in zip(torch_model.state_dict().keys(),
                 model_torch_load.state_dict().values()):
@@ -63,7 +62,7 @@ eps_list_contrast = np.linspace(0, 0.1,11)
 
 
 for image_id in range(2):
-    image_id = image_id + 1 #not deaming with image 0
+    image_id = image_id + 1 #not dealing with image 0
     print("image", image_id)
     list_info = []
     print(f"Begin to work with image {image_id}")
