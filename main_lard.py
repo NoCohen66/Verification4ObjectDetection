@@ -58,10 +58,11 @@ print("Let's apply it to test dataset:", len(X_train))
 list_info_time = []
 images_exp = []
 eps_list = np.linspace(0, 0.0002,11)
-eps_list_contrast = np.linspace(0, 0.1,11)
+eps_list_contrast_CROWN = np.linspace(0, 0.1,11)
+eps_list_contrast = np.linspace(0, 0.001,11)
 
 
-for image_id in range(2):
+for image_id in range(105):
     image_id = image_id + 1 #not dealing with image 0
     print("image", image_id)
     list_info = []
@@ -69,7 +70,6 @@ for image_id in range(2):
     st_im = time.time()
 
     X = X_train_[-image_id][None]/255
-    print("hhhhhere", X.shape)
     y = Y_train_[-image_id]*256
     gt_box = y
     gt_box = gt_box.detach().numpy()
@@ -80,14 +80,14 @@ for image_id in range(2):
         for i in range(len(eps_list)):
             print("variations", eps_list[i])
             start_perturbation = time.time() 
-            lb_box_wn, ub_box_wn = bound_whitenoise(torch_model, X, eps_list[i], method=method.split()[0])
-            lb_box_bri, ub_box_bri = bound_brightness_LARD(model_bri, X, eps_list[i], method=method.split()[0])
-            lb_box_contr, ub_box_contr = bound_contrast_LARD(model_contr, X, eps_list_contrast[i], method=method.split()[0])
+            if method == 'backward (CROWN)':
+                 lb_box_contr, ub_box_contr = bound_contrast_LARD(model_contr, X, eps_list_contrast_CROWN[i], method=method.split()[0])
+            else: 
+                 lb_box_contr, ub_box_contr = bound_contrast_LARD(model_contr, X, eps_list_contrast[i], method=method.split()[0])
+
             end_perturbation = time.time()
             st_computed_ious = time.time()
-            perturbations_dict = {"whitenoise": [lb_box_wn, ub_box_wn],
-            "brightness":[lb_box_bri, ub_box_bri],
-            "contrast":[lb_box_contr, ub_box_contr]}
+            perturbations_dict = {"contrast":[lb_box_contr, ub_box_contr]}
             for perturbation_name, bounds in perturbations_dict.items():
                 print("perturbation_name", perturbation_name)
                 lb_box, ub_box = bounds[0], bounds[1]
@@ -108,8 +108,9 @@ for image_id in range(2):
             
                 list_info.append(Merge({"method":method,
                                     "image_id":image_id, 
-                                    "eps":eps_list[i], 
+                                    #"eps":eps_list[i], 
                                     "eps_contrast":eps_list_contrast[i],
+                                    "eps_contrast_CROWN":eps_list_contrast[i],
                                     "fake_iou": fake_iou,
                                     "perturbation":perturbation_name, 
                                     "bounds_clip":[lb_box, ub_box],
@@ -121,9 +122,9 @@ for image_id in range(2):
     list_info_time.append((image_id, et_im-st_im))
     images_exp.append(X[0,0,:,:].flatten().tolist())
     df = pd.DataFrame(list_info)
-    df.to_csv(f"results/LARD/new_{image_id}_iou_calculations.csv")
+    df.to_csv(f"results/LARD/contr_{image_id}_iou_calculations.csv")
   
 
-pd.DataFrame(list_info_time).to_csv("results/LARD/times2.csv")
-pd.DataFrame(images_exp).to_csv("results/LARD/images.csv")
+pd.DataFrame(list_info_time).to_csv("results/LARD/contr_times2.csv")
+pd.DataFrame(images_exp).to_csv("results/LARD/contr_images.csv")
 
