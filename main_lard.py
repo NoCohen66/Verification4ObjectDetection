@@ -84,7 +84,7 @@ for image_id in range(105):
                  lb_box_contr, ub_box_contr = bound_contrast_LARD(model_contr, X, eps_list_contrast_CROWN[i], method=method.split()[0])
             else: 
                  lb_box_contr, ub_box_contr = bound_contrast_LARD(model_contr, X, eps_list_contrast[i], method=method.split()[0])
-
+            
             end_perturbation = time.time()
             st_computed_ious = time.time()
             perturbations_dict = {"contrast":[lb_box_contr, ub_box_contr]}
