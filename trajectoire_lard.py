@@ -60,8 +60,12 @@ images_exp = []
 #eps_list = np.linspace(0, 0.1,11)
 #eps_list_contrast_CROWN = np.linspace(0, 0.1,11)
 #eps_list_contrast = np.linspace(0, 0.001,11)
-eps_list = np.linspace(0, 0.02,11)
-for image_id in np.linspace(1, 100, 10):
+
+#eps_list = np.linspace(0, 0.02,11) good 
+eps_list = [0.02]
+
+#for image_id in np.linspace(1, 100, 10): good
+for image_id in [150, 160, 170, 180, 190, 200]: #aie aie whanegen expe
     image_id = int(image_id)
     print("image", image_id)
     list_info = []
@@ -118,9 +122,9 @@ for image_id in np.linspace(1, 100, 10):
     list_info_time.append((image_id, et_im-st_im))
     images_exp.append(X.flatten().tolist())
     df = pd.DataFrame(list_info)
-    df.to_csv(f"results/trajec/manyFAR/contr_{image_id}_iou_calculations.csv")
+    df.to_csv(f"results/trajec/many0.02/{image_id}_iou_calculations.csv")
   
 
-pd.DataFrame(list_info_time).to_csv("results/trajec/manyFAR/infos/contr_times2.csv")
-pd.DataFrame(images_exp).to_csv("results/trajec/manyFAR/infos/contr_images.csv")
+#pd.DataFrame(list_info_time).to_csv("results/trajec/manyFAR/infos/contr_times2.csv")
+#pd.DataFrame(images_exp).to_csv("results/trajec/manyFAR/infos/contr_images.csv")
 
