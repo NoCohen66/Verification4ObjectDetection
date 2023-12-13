@@ -432,6 +432,28 @@ class IoU:
         else:
             return(dict_iou)
 
+    def iou_display(self, display = False):
+        start_vanilla =  time.time()
+        vanilla = self.iou_reluval()
+        end_vanilla = time.time()
+
+        start_extension = time.time()
+        extension = self.iou_optim()
+        end_extension = time.time() 
+
+
+        dict_iou = { "IoU_vanilla":vanilla,
+                     "tmps_vanilla": end_vanilla-start_vanilla,
+                     "IoU_extension":extension,
+                     "tmps_extension":end_extension-start_extension, 
+                     }
+
+        if display == True: 
+            for key, values in dict_iou.items(): 
+                    print(key, values)
+        else:
+            return(dict_iou)
+
     
     def plot(self, optim_plot = True):
         """
