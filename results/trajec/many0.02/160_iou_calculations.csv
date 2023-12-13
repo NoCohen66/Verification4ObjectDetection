@@ -1,0 +1,2 @@
+,method,image_id,eps,fake_iou,perturbation,bounds_clip,ub_box,lb_box,gt,elapsed_time_perturbation,elapsed_time_eps_computed_ious,IoU_vanilla,tmps_vanilla,IoU_extension,tmps_extension
+0,backward (CROWN),160,0.02,True,brightness,"[[130.16629, 128.72235, 139.27158, 133.39091], [161.28136, 141.69498, 173.80663, 148.48318]]","[161.28136, 141.69498, 173.80663, 148.48318]","[130.16629, 128.72235, 139.27158, 133.39091]",[144.73203 133.51057 155.50327 139.40785],9.887425184249878,0.0016598701477050781,"[0, 1]",0,"[0, 1]",0
