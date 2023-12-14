@@ -66,8 +66,8 @@ eps_list = [0.002, 0.01, 0.02]
 
 #for image_id in np.linspace(1, 100, 10): good
 #for image_id in [150, 160, 170, 180, 190, 200]: #aie aie whanegen expe
-#for image_id in [ 1,  12,  23,  34,  45,  56,  67,  78,  89, 100, 150, 160, 170, 180, 190, 200]:
-for image_id in range(2):
+for image_id in [ 1,  12,  23,  34,  45,  56,  67,  78,  89, 100, 150, 160, 170, 180, 190, 200]:
+#for image_id in range(2):
     image_id = int(image_id)
     print("image", image_id)
     list_info = []
