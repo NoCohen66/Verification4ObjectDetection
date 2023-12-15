@@ -62,7 +62,7 @@ images_exp = []
 #eps_list_contrast = np.linspace(0, 0.001,11)
 
 #eps_list = np.linspace(0, 0.02,11) good 
-eps_list = [0.002, 0.01, 0.02]
+eps_list = [0.01, 0.015, 0.017]
 
 #for image_id in np.linspace(1, 100, 10): good
 #for image_id in [150, 160, 170, 180, 190, 200]: #aie aie whanegen expe
@@ -98,7 +98,7 @@ for image_id in [ 1,  12,  23,  34,  45,  56,  67,  78,  89, 100, 150, 160, 170,
                     predicted_box = Hyperrectangle_interval(x_1=Interval(lb_box[0],ub_box[0]), x_2=Interval(lb_box[2],ub_box[2]), y_1=Interval(lb_box[1],ub_box[1]), y_2=Interval(lb_box[3],ub_box[3]))
                     dict_iou = IoU(predicted_box, ground_truth_box).iou(display = False)
                     df_iou = IoU(predicted_box, ground_truth_box).iou_optim(returnDf = True)
-                    x_bl, y_tr, y_bl, y_tr = df_iou[df_iou["iou"] == dict_iou["IoU_extension"][0]][["x_bl", "y_tr", "y_bl", "y_tr"]].values[0]
+                    x_bl,  x_tr,  y_bl,  y_tr = df_iou[df_iou["iou"] == dict_iou["IoU_extension"][0]][["x_bl",  "x_tr",  "y_bl",  "y_tr"]].values[0]
                     fake_iou = False
                 except ValueError as e: 
                     print(e)
@@ -119,7 +119,7 @@ for image_id in [ 1,  12,  23,  34,  45,  56,  67,  78,  89, 100, 150, 160, 170,
                                     "ub_box": ub_box,
                                     "lb_box": lb_box, 
                                     "gt":gt_box, 
-                                    "optim_box":[x_bl, y_tr, y_bl, y_tr], 
+                                    "optim_box":[x_bl,  x_tr,  y_bl,  y_tr], 
                                     "elapsed_time_perturbation":end_perturbation-start_perturbation,
                                     "elapsed_time_eps_computed_ious" : et_computed_ious - st_computed_ious }, dict_iou))
 
@@ -128,7 +128,7 @@ for image_id in [ 1,  12,  23,  34,  45,  56,  67,  78,  89, 100, 150, 160, 170,
     list_info_time.append((image_id, et_im-st_im))
     images_exp.append(X.flatten().tolist())
     df = pd.DataFrame(list_info)
-    df.to_csv(f"results/optim_box/{image_id}_iou_calculations.csv")
+    df.to_csv(f"results/optim_box_bitmore/{image_id}_iou_calculations.csv")
   
 
 #pd.DataFrame(list_info_time).to_csv("results/trajec/manyFAR/infos/contr_times2.csv")
