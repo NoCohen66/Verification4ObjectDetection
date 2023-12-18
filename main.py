@@ -7,7 +7,7 @@ from iou_calculator.Hyperrectangle_interval import Hyperrectangle_interval
 from iou_calculator.Hyperrectangle import Hyperrectangle
 from iou_calculator.Interval import Interval
 from iou_calculator.IoU import IoU
-from iou_calculator.utils import Merge, show_im, show_im_origin, check_box, clip_corner
+from iou_calculator.utils import Merge, clip_corner
 from IPython.display import display
 import torch 
 from torch.utils.data import DataLoader

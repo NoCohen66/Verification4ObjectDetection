@@ -1,4 +1,3 @@
-
 class Interval:
     def __init__(self, l,u=None):
 
