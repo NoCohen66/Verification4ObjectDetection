@@ -46,7 +46,17 @@ We propose a two-step approach as shown in the figure above.
 ### Download
 
 You can download a copy of all the files in this repository by cloning the git repository:
-`git clone https://github.com/NoCohen66/Verification4ObjectDetection.git`
+```
+git clone https://github.com/NoCohen66/Verification4ObjectDetection.git
+```
+## Setup
+
+
+- **`pip`** install: You can use the `requirements.txt` to install packages through:
+```
+pip install -r requirements.txt
+```
+
 
 ### Run
 
@@ -59,6 +69,10 @@ python main.py
 
 In the `main.py` script of the Verification4ObjectDetection repository, various parameters are set up for running experiments. Here's an example using the default values:
 
+```
+python main.py
+```
+
 - `--dataset_model`: Specifies the dataset and model to use. Default is "LARD", which likely refers to a specific dataset/model combination in the domain of object detection.
 - `--eps_list_whitenoise`: Sets the range of variation for whitenoise perturbation. The default range is from 0 to 0.002, divided into 10 intervals.
 - `--eps_list_brightness`: Similar to whitenoise, this argument sets the range for brightness perturbation, also defaulting to a range from 0 to 0.002 over 10 intervals.
@@ -68,13 +82,6 @@ In the `main.py` script of the Verification4ObjectDetection repository, various 
 
 
 
-## Setup
-
-
-- **`pip`** install: You can use the `requirements.txt` to install packages through:
-```
-pip install -r requirements.txt
-```
 
 
 ## Licence
