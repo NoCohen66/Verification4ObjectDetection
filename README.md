@@ -5,9 +5,9 @@
 
 ## IBP IoU an approach for the formal verificaion of object detection models.
 
-To our knowledge, the case of stability of object detection has not yet been fully addressed by formal methods. 
+
 To verify stability, we need to rely on the
-*Intersection over Union* (IoU), a common metric for evaluating the performance of object detection. 
+*Intersection over Union* [(IoU)](https://en.wikipedia.org/wiki/Jaccard_index), a common metric for evaluating the performance of object detection. 
 
 
 <br>
@@ -22,14 +22,14 @@ To verify stability, we need to rely on the
 </div>
 <br>
 
-### Abstract
+## Abstract
 
 We introduce a novel Interval Bound Propagation (IBP) approach for the formal verification of object detection models, specifically targeting the Intersection over Union (IoU) metric.
 The approach is compatible with popular abstract interpretation based verification tools.
 The resulting verifier is evaluated on landing approach runway detection and handwritten digit recognition case studies.
 Comparisons against a baseline (Vanilla IBP IoU) highlight the superior performance of Optimal IBP IoU in ensuring accuracy and stability, contributing to more secure and robust machine learning applications. 
 
-### Software implementation
+## Software implementation
 
 
 <div align="center">
@@ -41,11 +41,21 @@ We propose a two-step approach as shown in the figure above.
 * Step 1 **solver**: we apply a perturbation on the input and utilize [Auto-LIRPA](https://github.com/Verified-Intelligence/auto_LiRPA) for verifying reachable outputs. The output comprises extended bounding boxes, defined not by fixed coordinates, but by reachable intervals for each coordinate. Source codes are in the `detection` folder.
 * Step 2 **IBP IoU**:  We estimate the propagation effect on the IoU. Source codes are in the `iou_calculator` folder. 
 
-## Getting the code
+## Getting started
+
+### Download
 
 You can download a copy of all the files in this repository by cloning the git repository:
 `git clone https://github.com/NoCohen66/Verification4ObjectDetection.git`
 
+### Run
+
+To run the code, you can use the following command: 
+```
+python main.py
+```
+
+### Configuration
 
 In the `main.py` script of the Verification4ObjectDetection repository, various parameters are set up for running experiments. Here's an example using the default values:
 
