@@ -46,15 +46,8 @@ Comparisons against a baseline (Vanilla IBP IoU) highlight the superior performa
 3. `iou_calculator/`: Contains propagation effect on the IoU (step 2: **IBP IoU**).
 
 
-## Getting started
+## Requirements
 
-### Download
-
-You can download a copy of all the files in this repository by cloning the git repository:
-```
-git clone https://github.com/NoCohen66/Verification4ObjectDetection.git
-```
-## Setup
 
 
 - **`pip`** install: You can use the `requirements.txt` to install packages through:
@@ -63,7 +56,7 @@ pip install -r requirements.txt
 ```
 
 
-### Run
+## Verification
 
 IBP IoU can be computed via the following command: 
 
