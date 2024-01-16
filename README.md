@@ -65,7 +65,7 @@ python main.py -d <dataset> -m <methods list> -nb  <nb images> -w <list whitenoi
 ```
 
 - `dataset`: Either 'MNIST' or 'LARD'.
-- `methods`: Defines the methods used to compute bounds. It can includes 'IBP', 'IBP+backward (CROWN-IBP)', and 'backward (CROWN)'.
+- `methods`: Defines the methods used to compute bounds. It can includes 'IBP', 'IBP+backward (CROWN-IBP)', and 'backward (CROWN)'. By default, these 3 methods are included.
 - `nb images`: Determines the number of images to be processed. The default value is set to 40.
 - `list whitenoise`: Sets the range of variation for whitenoise perturbation. The default range is from 0 to 0.002, divided into 10 intervals.
 - `list brightness`: Similar to whitenoise, this argument sets the range for brightness perturbation, also defaulting to a range from 0 to 0.002 over 10 intervals.
