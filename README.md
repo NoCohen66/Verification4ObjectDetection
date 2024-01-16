@@ -65,14 +65,7 @@ pip install -r requirements.txt
 
 ### Run
 
-To run the code, you can use the following command: 
-```
-python main.py
-```
-
-### Configuration
-
-In the `main.py` script of the Verification4ObjectDetection repository, various parameters are set up for running experiments. Here's an example using the default values:
+IBP IoU can be computed via the following command: 
 
 ```
 python main.py -d <dataset> -m <methods list> -nb  <nb images> -w <list whitenoise> -b <list brightness> -c <list contrast>
