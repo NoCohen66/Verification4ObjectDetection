@@ -21,12 +21,12 @@ import pickle as pkl
 
 parser = argparse.ArgumentParser(description="Process some datasets and networks.")
 
-parser.add_argument('--dataset_model', default="LARD", help="The dataset and model to use.")
-parser.add_argument('--eps_list_whitenoise', default= np.linspace(0, 0.002,10), help="Range of variation for whitenoise perturbation.")
-parser.add_argument('--eps_list_brightness', default= np.linspace(0, 0.002,10), help="Range of variation for brightness perturbation.")
-parser.add_argument('--eps_list_contrast', default= np.linspace(0, 0.01,10), help="Range of variation for contrast perturbation.")
-parser.add_argument('--methods_list', default=['IBP', 'IBP+backward (CROWN-IBP)', 'backward (CROWN)'], help="Methods use to compute bounds.")
-parser.add_argument('--nb_images', default=40, help="Quantity of images to be processed.")
+parser.add_argument('-d', '--dataset_model', default="LARD", help="The dataset and model to use.")
+parser.add_argument('-w', '--eps_list_whitenoise', default= np.linspace(0, 0.002,10), help="Range of variation for whitenoise perturbation.")
+parser.add_argument('-b','--eps_list_brightness', default= np.linspace(0, 0.002,10), help="Range of variation for brightness perturbation.")
+parser.add_argument('-c','--eps_list_contrast', default= np.linspace(0, 0.01,10), help="Range of variation for contrast perturbation.")
+parser.add_argument('-m','--methods_list', default=['IBP', 'IBP+backward (CROWN-IBP)', 'backward (CROWN)'], help="Methods use to compute bounds.")
+parser.add_argument('-nb','--nb_images', default=40, help="Quantity of images to be processed.")
 
 parser.add_argument('--MNIST_model_digit_filename', default='detection/weights/toy_model_classif', help="Location of the classification model trained using the MNIST dataset.")
 parser.add_argument('--MNIST_model_corner_filename', default='detection/weights/toy_model_corners', help="Location of the regression model trained using the MNIST dataset.")

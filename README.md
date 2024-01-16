@@ -40,9 +40,11 @@ Comparisons against a baseline (Vanilla IBP IoU) highlight the superior performa
 </div>
 
 
-We propose a two-step approach as shown in the figure above.
-* Step 1 **solver**: we apply a perturbation **(brightness, contrast, white-noise)** on the input and utilize [Auto-LIRPA](https://github.com/Verified-Intelligence/auto_LiRPA) for verifying reachable outputs. The output comprises extended bounding boxes, defined not by fixed coordinates, but by reachable intervals for each coordinate. Source codes are in the `detection` folder.
-* Step 2 **IBP IoU**:  We estimate the propagation effect on the IoU. Source codes are in the `iou_calculator` folder. 
+
+1. `main.py`: Main script to compute IBP IoU.
+3. `detection/`: Contains networks, dataset, and algorithms for perturbation **(brightness, contrast, white-noise)** on the input with [Auto-LIRPA](https://github.com/Verified-Intelligence/auto_LiRPA) (step 1: **solver**).
+3. `iou_calculator/`: Contains propagation effect on the IoU (step 2: **IBP IoU**).
+
 
 ## Getting started
 
@@ -73,16 +75,17 @@ python main.py
 In the `main.py` script of the Verification4ObjectDetection repository, various parameters are set up for running experiments. Here's an example using the default values:
 
 ```
-python main.py
+python main.py -d <dataset> -m <methods list> -nb  <nb images> -w <list whitenoise> -b <list brightness> -c <list contrast>
 ```
 
-- `--dataset_model`: Specifies the dataset and model to use. Default is "LARD", which likely refers to a specific dataset/model combination in the domain of object detection.
-- `--eps_list_whitenoise`: Sets the range of variation for whitenoise perturbation. The default range is from 0 to 0.002, divided into 10 intervals.
-- `--eps_list_brightness`: Similar to whitenoise, this argument sets the range for brightness perturbation, also defaulting to a range from 0 to 0.002 over 10 intervals.
-- `--eps_list_contrast`: Specifies the range for contrast perturbation, with a default range from 0 to 0.01 over 10 intervals.
-- `--methods_list`: Defines the methods used to compute bounds. By default, it includes 'IBP', 'IBP+backward (CROWN-IBP)', and 'backward (CROWN)'.
-- `--nb_images`: Determines the number of images to be processed. The default value is set to 40.
+- `dataset`: Either 'MNIST' or 'LARD'.
+- `methods`: Defines the methods used to compute bounds. It can includes 'IBP', 'IBP+backward (CROWN-IBP)', and 'backward (CROWN)'.
+- `nb images`: Determines the number of images to be processed. The default value is set to 40.
+- `list whitenoise`: Sets the range of variation for whitenoise perturbation. The default range is from 0 to 0.002, divided into 10 intervals.
+- `list brightness`: Similar to whitenoise, this argument sets the range for brightness perturbation, also defaulting to a range from 0 to 0.002 over 10 intervals.
+- `list contrast`: Specifies the range for contrast perturbation, with a default range from 0 to 0.01 over 10 intervals.
 
+For more configuration seetings, see [main.py](https://github.com/NoCohen66/Verification4ObjectDetection/blob/main/main.py).
 
 
 
