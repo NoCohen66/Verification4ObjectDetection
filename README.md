@@ -38,7 +38,7 @@ Comparisons against a baseline (Vanilla IBP IoU) highlight the superior performa
 
 
 We propose a two-step approach as shown in the figure above.
-* Step 1 **solver**: we apply a perturbation on the input and utilize [Auto-LIRPA](https://github.com/Verified-Intelligence/auto_LiRPA) for verifying reachable outputs. The output comprises extended bounding boxes, defined not by fixed coordinates, but by reachable intervals for each coordinate. Source codes are in the `detection` folder.
+* Step 1 **solver**: we apply a perturbation **(brightness, contrast, white-noise)** on the input and utilize [Auto-LIRPA](https://github.com/Verified-Intelligence/auto_LiRPA) for verifying reachable outputs. The output comprises extended bounding boxes, defined not by fixed coordinates, but by reachable intervals for each coordinate. Source codes are in the `detection` folder.
 * Step 2 **IBP IoU**:  We estimate the propagation effect on the IoU. Source codes are in the `iou_calculator` folder. 
 
 ## Getting started
