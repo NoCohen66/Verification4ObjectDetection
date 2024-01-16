@@ -32,13 +32,16 @@ The resulting verifier is evaluated on:
 
 Comparisons against a baseline (Vanilla IBP IoU) highlight the superior performance of Optimal IBP IoU in ensuring accuracy and stability, contributing to more secure and robust machine learning applications. 
 
-## Software implementation
-
 
 <div align="center">
     <img src="results/images/overview_IBP_IoU_approach.png" width="100%" alt="overview_IBP_IoU_approach" align="center" />
 </div>
 
+ <br />
+
+ <br />
+
+## Software implementation
 
 
 1. `main.py`: Main script to compute IBP IoU.
