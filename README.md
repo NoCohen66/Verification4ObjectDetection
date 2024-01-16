@@ -26,7 +26,10 @@ To verify stability, we need to rely on the
 
 We introduce a novel Interval Bound Propagation (IBP) approach for the formal verification of object detection models, specifically targeting the Intersection over Union (IoU) metric.
 The approach is compatible with popular abstract interpretation based verification tools.
-The resulting verifier is evaluated on landing approach runway detection and handwritten digit recognition case studies.
+The resulting verifier is evaluated on:
+* [LARD 🐷](https://github.com/deel-ai/LARD) landing approach runway detection 
+* [MNIST-objectdetection](https://github.com/hukkelas/MNIST-ObjectDetection) handwritten digit recognition case studies
+
 Comparisons against a baseline (Vanilla IBP IoU) highlight the superior performance of Optimal IBP IoU in ensuring accuracy and stability, contributing to more secure and robust machine learning applications. 
 
 ## Software implementation
