@@ -1,7 +1,7 @@
-from solver.LARD.NeuralNetwork_LARD import Neural_network_LARD, Neural_network_LARD_BrightnessContrast
-from solver.MNIST.NeuralNetwork_OL_v2 import NeuralNetwork_OL_v2
-from solver.MNIST.CustomMnistDataset_OL import CustomMnistDataset_OL
-from solver.MNIST.NeuralNetwork_BrightnessContrast import NeuralNetwork_BrightnessContrast
+from solver.LARD.model.NeuralNetwork_LARD import Neural_network_LARD, Neural_network_LARD_BrightnessContrast
+from solver.MNIST.model.NeuralNetwork_OL_v2 import NeuralNetwork_OL_v2
+from solver.MNIST.data.CustomMnistDataset_OL import CustomMnistDataset_OL
+from solver.MNIST.model.NeuralNetwork_BrightnessContrast import NeuralNetwork_BrightnessContrast
 from solver.perturbation import bound_whitenoise, bound_brightness, bound_contrast, bound_brightness_LARD, bound_contrast_LARD
 from iou_calculator.Hyperrectangle_interval import Hyperrectangle_interval
 from iou_calculator.Hyperrectangle import Hyperrectangle
@@ -28,15 +28,14 @@ parser.add_argument('-c','--eps_list_contrast', default= np.linspace(0, 0.01,10)
 parser.add_argument('-m','--methods_list', nargs="+", default=['IBP', 'IBP+backward (CROWN-IBP)', 'backward (CROWN)'], help="Methods use to compute bounds.")
 parser.add_argument('-nb','--nb_images', default=40, help="Quantity of images to be processed.")
 
-parser.add_argument('--MNIST_model_digit_filename', default='solver/MNIST/toy_model_classif', help="Location of the classification model trained using the MNIST dataset.")
-parser.add_argument('--MNIST_model_corner_filename', default='solver/MNIST/toy_model_corners', help="Location of the regression model trained using the MNIST dataset.")
-parser.add_argument('--MNIST_dataset', default="solver/MNIST/test.csv", help="Location of the MNIST test dataset.")
+parser.add_argument('--MNIST_model_digit_filename', default='solver/MNIST/model/toy_model_classif', help="Location of the classification model trained using the MNIST dataset.")
+parser.add_argument('--MNIST_model_corner_filename', default='solver/MNIST/model/toy_model_corners', help="Location of the regression model trained using the MNIST dataset.")
+parser.add_argument('--MNIST_dataset', default="solver/MNIST/data/test.csv", help="Location of the MNIST test dataset.")
 parser.add_argument('--MNIST_results_path', default='results/MNIST', help="Directory for storing the MNIST results.")
 
-parser.add_argument('--LARD_model_torch_load_filename', default='solver/LARD/tmp_nfm_v4', help="Location of the object detection model trained using the LARD dataset.")
-parser.add_argument('--LARD_dataset', default='solver/LARD/lard_nfm_data_iou.pkl', help="Location of the LARD test dataset.")
+parser.add_argument('--LARD_model_torch_load_filename', default='solver/LARD/model/tmp_nfm_v4', help="Location of the object detection model trained using the LARD dataset.")
+parser.add_argument('--LARD_dataset', default='solver/LARD/data/lard_nfm_data_iou.pkl', help="Location of the LARD test dataset.")
 parser.add_argument('--LARD_results_path', default='results/LARD', help="Directory for storing the LARD results.")
-
 args = parser.parse_args()
 
 eps_list_whitenoise = args.eps_list_whitenoise

@@ -45,9 +45,12 @@ Comparisons against a baseline (Vanilla IBP IoU) highlight the superior performa
 
 
 1. `main.py`: Main script to compute IBP IoU.
-3. `detection/`: Contains trained networks, datasets, and algorithms for perturbation **(brightness, contrast, white-noise)** on the input with [Auto-LIRPA](https://github.com/Verified-Intelligence/auto_LiRPA) (step 1: **solver**).
+3. `solver/`: Contains trained networks, datasets, and algorithms for perturbation **(brightness, contrast, white-noise)** on the input with [Auto-LIRPA](https://github.com/Verified-Intelligence/auto_LiRPA) (step 1).
 3. `iou_calculator/`: Contains propagation effect on the IoU (step 2: **IBP IoU**).
 
+<div align="center">
+    <img src="results/images/schema_repo.png" width="100%" alt="overview_IBP_IoU_approach" align="center" />
+</div>
 
 ## Requirements
 
