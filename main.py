@@ -1,8 +1,8 @@
-from detection.NeuralNetwork_LARD import Neural_network_LARD, Neural_network_LARD_BrightnessContrast
-from detection.NeuralNetwork_OL_v2 import NeuralNetwork_OL_v2
-from detection.CustomMnistDataset_OL import CustomMnistDataset_OL
-from detection.NeuralNetwork_BrightnessContrast import NeuralNetwork_BrightnessContrast
-from detection.perturbation import bound_whitenoise, bound_brightness, bound_contrast, bound_brightness_LARD, bound_contrast_LARD
+from solver.LARD.NeuralNetwork_LARD import Neural_network_LARD, Neural_network_LARD_BrightnessContrast
+from solver.MNIST.NeuralNetwork_OL_v2 import NeuralNetwork_OL_v2
+from solver.MNIST.CustomMnistDataset_OL import CustomMnistDataset_OL
+from solver.MNIST.NeuralNetwork_BrightnessContrast import NeuralNetwork_BrightnessContrast
+from solver.perturbation import bound_whitenoise, bound_brightness, bound_contrast, bound_brightness_LARD, bound_contrast_LARD
 from iou_calculator.Hyperrectangle_interval import Hyperrectangle_interval
 from iou_calculator.Hyperrectangle import Hyperrectangle
 from iou_calculator.Interval import Interval
@@ -25,16 +25,16 @@ parser.add_argument('-d', '--dataset_model', default="LARD", help="The dataset a
 parser.add_argument('-w', '--eps_list_whitenoise', default= np.linspace(0, 0.002,10), help="Range of variation for whitenoise perturbation.")
 parser.add_argument('-b','--eps_list_brightness', default= np.linspace(0, 0.002,10), help="Range of variation for brightness perturbation.")
 parser.add_argument('-c','--eps_list_contrast', default= np.linspace(0, 0.01,10), help="Range of variation for contrast perturbation.")
-parser.add_argument('-m','--methods_list', default=['IBP', 'IBP+backward (CROWN-IBP)', 'backward (CROWN)'], help="Methods use to compute bounds.")
+parser.add_argument('-m','--methods_list', nargs="+", default=['IBP', 'IBP+backward (CROWN-IBP)', 'backward (CROWN)'], help="Methods use to compute bounds.")
 parser.add_argument('-nb','--nb_images', default=40, help="Quantity of images to be processed.")
 
-parser.add_argument('--MNIST_model_digit_filename', default='detection/weights/toy_model_classif', help="Location of the classification model trained using the MNIST dataset.")
-parser.add_argument('--MNIST_model_corner_filename', default='detection/weights/toy_model_corners', help="Location of the regression model trained using the MNIST dataset.")
-parser.add_argument('--MNIST_dataset', default="detection/MNIST/test.csv", help="Location of the MNIST test dataset.")
+parser.add_argument('--MNIST_model_digit_filename', default='solver/MNIST/toy_model_classif', help="Location of the classification model trained using the MNIST dataset.")
+parser.add_argument('--MNIST_model_corner_filename', default='solver/MNIST/toy_model_corners', help="Location of the regression model trained using the MNIST dataset.")
+parser.add_argument('--MNIST_dataset', default="solver/MNIST/test.csv", help="Location of the MNIST test dataset.")
 parser.add_argument('--MNIST_results_path', default='results/MNIST', help="Directory for storing the MNIST results.")
 
-parser.add_argument('--LARD_model_torch_load_filename', default='detection/weights/tmp_nfm_v4', help="Location of the object detection model trained using the LARD dataset.")
-parser.add_argument('--LARD_dataset', default='detection/LARD/lard_nfm_data_iou.pkl', help="Location of the LARD test dataset.")
+parser.add_argument('--LARD_model_torch_load_filename', default='solver/LARD/tmp_nfm_v4', help="Location of the object detection model trained using the LARD dataset.")
+parser.add_argument('--LARD_dataset', default='solver/LARD/lard_nfm_data_iou.pkl', help="Location of the LARD test dataset.")
 parser.add_argument('--LARD_results_path', default='results/LARD', help="Directory for storing the LARD results.")
 
 args = parser.parse_args()
@@ -83,7 +83,7 @@ def main():
         
         
 
-        for image_id in range(args.nb_images):
+        for image_id in range(int(args.nb_images)):
             list_info = []
             print(f"Begin to work with image {image_id}")
             st_im = time.time()
@@ -92,7 +92,9 @@ def main():
             gt_logit, gt_box = y
             gt_box = gt_box.detach().numpy()[0]
 
-            for method in args.methods_list:
+            print("zrhs")
+            print(args.methods_list)
+            for method in list(args.methods_list):
                 print("Method:", method)
                 for i in range(len(eps_list_whitenoise)):
         
@@ -189,7 +191,7 @@ def main():
         images_exp = []
 
 
-        for image_id in range(args.nb_images):
+        for image_id in range(int(args.nb_images)):
             image_id = image_id + 1 #not dealing with image 0
             list_info = []
             print(f"Begin to work with image {image_id}")
@@ -201,7 +203,7 @@ def main():
             gt_box = gt_box.detach().numpy()
             ground_truth_box = Hyperrectangle(x_bl=gt_box[0],x_tr=gt_box[2], y_bl=gt_box[1], y_tr=gt_box[3])
         
-            for method in ['IBP', 'IBP+backward (CROWN-IBP)', 'backward (CROWN)' ]:
+            for method in list(args.methods_list):
                 print("Method:", method)
                 for i in range(len(eps_list_contrast)):
                     start_perturbation = time.time() 

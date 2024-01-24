@@ -1,5 +1,5 @@
-from detection.utils_detection import get_center
-from detection.utils_detection import random_corners
+from solver.utils_detection import get_center
+from solver.utils_detection import random_corners
 from torch.utils.data import Dataset
 import numpy as np
 
