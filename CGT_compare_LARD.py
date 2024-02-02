@@ -138,7 +138,7 @@ def main():
                     else:
                          print("CGT is NOT equal to brightness ")
                     
-                    exit()
+                    
 
                     # CGT not clamp
                     X_lirpa = X.float().to('cpu')
