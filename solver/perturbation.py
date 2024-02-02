@@ -11,10 +11,17 @@ def bound_whitenoise(model_box, X, eps, method='crown'):
     X_lirpa = X.float().to('cpu')
     model_lirpa_corner = BoundedModule(model_box, X_lirpa)
     ptb = PerturbationLpNorm(norm=np.inf, eps=eps)
-    print("whitenoise", ptb)
     input_lirpa = BoundedTensor(X_lirpa, ptb)
     lb_box, ub_box = model_lirpa_corner.compute_bounds(x=(input_lirpa,),method=method)
     return lb_box.detach().numpy()[0], ub_box.detach().numpy()[0]
+
+def bound_whitenoise_input(model_box, X, eps, method='crown'):
+    X_lirpa = X.float().to('cpu')
+    ptb = PerturbationLpNorm(norm=np.inf, eps=eps)
+    input_lirpa = BoundedTensor(X_lirpa, ptb)
+    return input_lirpa
+
+
 
 def bound_whitenoise_xLxU(model_box, X, inputs_L,inputs_U,  method='crown'):
     X_lirpa = X.float().to('cpu')
@@ -95,6 +102,20 @@ def bound_brightness_LARD(model_corners, X, eps, method='crown'):
     lb_brightness, ub_brightness = model_lirpa_corners.compute_bounds(x=(input_lirpa_brightness,),
                                                         method=method)
     return lb_brightness.detach().numpy()[0], ub_brightness.detach().numpy()[0]
+
+def bound_brightness_LARD_input(model_corners, X, eps, method='crown'):
+    tensor_init_brightness = torch.tensor([[0.0]]).float().to('cpu')
+    ptb_brightness = PerturbationLpNorm(norm=np.inf, eps=eps) 
+    input_lirpa_brightness = BoundedTensor(tensor_init_brightness, ptb_brightness)
+    return input_lirpa_brightness
+
+def bound_brightness_LARD_ptb(model_corners, X, eps, method='crown'):
+    tensor_init_brightness = torch.tensor([[0.0]]).float().to('cpu')
+    set_brightness_LARD(model_corners, X)
+    model_lirpa_corners = BoundedModule(model_corners, tensor_init_brightness)
+    ptb_brightness = PerturbationLpNorm(norm=np.inf, eps=eps) 
+    input_lirpa_brightness = BoundedTensor(tensor_init_brightness, ptb_brightness)
+    return ptb_brightness, input_lirpa_brightness
 
 def bound_contrast_LARD(model_corners, X, brightness_variations, method='crown'):
     tensor_init_contrast = torch.tensor([[1.0]]).float().to('cpu')

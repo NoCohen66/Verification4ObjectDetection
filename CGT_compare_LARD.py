@@ -2,7 +2,7 @@ from solver.LARD.model.NeuralNetwork_LARD import Neural_network_LARD, Neural_net
 from solver.MNIST.model.NeuralNetwork_OL_v2 import NeuralNetwork_OL_v2
 from solver.MNIST.data.CustomMnistDataset_OL import CustomMnistDataset_OL
 from solver.MNIST.model.NeuralNetwork_BrightnessContrast import NeuralNetwork_BrightnessContrast
-from solver.perturbation import bound_whitenoise, bound_brightness, bound_contrast, bound_brightness_LARD, bound_contrast_LARD
+from solver.perturbation import bound_whitenoise, bound_brightness_LARD_input, bound_whitenoise_input, bound_brightness, bound_contrast, bound_brightness_LARD, bound_contrast_LARD
 from iou_calculator.Hyperrectangle_interval import Hyperrectangle_interval
 from iou_calculator.Hyperrectangle import Hyperrectangle
 from iou_calculator.Interval import Interval
@@ -25,9 +25,9 @@ import pickle as pkl
 parser = argparse.ArgumentParser(description="Process some datasets and networks.")
 
 parser.add_argument('-d', '--dataset_model', default="LARD", help="The dataset and model to use.")
-parser.add_argument('-w', '--eps_list_whitenoise', default= np.linspace(0, 0.0006,11), help="Range of variation for whitenoise perturbation.")
-parser.add_argument('-b','--eps_list_brightness', default= np.linspace(0, 0.0006,11), help="Range of variation for brightness perturbation.")
-parser.add_argument('-c','--eps_list_contrast', default= np.linspace(0, 0.0006,11), help="Range of variation for contrast perturbation.")
+parser.add_argument('-w', '--eps_list_whitenoise', default= np.linspace(0.0001, 0.0006,11), help="Range of variation for whitenoise perturbation.")
+parser.add_argument('-b','--eps_list_brightness', default= np.linspace(0.0001, 0.0006,11), help="Range of variation for brightness perturbation.")
+parser.add_argument('-c','--eps_list_contrast', default= np.linspace(0.0001, 0.0006,11), help="Range of variation for contrast perturbation.")
 #parser.add_argument('-m','--methods_list', nargs="+", default=['IBP', 'IBP+backward (CROWN-IBP)', 'backward (CROWN)'], help="Methods use to compute bounds.")
 parser.add_argument('-m','--methods_list', nargs="+", default=['IBP+backward (CROWN-IBP)'], help="Methods use to compute bounds.")
 
@@ -105,13 +105,14 @@ def main():
             for method in list(args.methods_list):
                 print("Method:", method)
                 for i in range(len(eps_list_contrast)):
+                    print(eps_list_whitenoise[i])
                     start_perturbation = time.time() 
                     #lb_box_contr, ub_box_contr = bound_contrast_LARD(model_contr, X, eps_list_contrast[i], method=method.split()[0])
                     lb_box_wn, ub_box_wn = bound_whitenoise(torch_model, X, eps_list_whitenoise[i], method=method.split()[0])
                     lb_box_bri, ub_box_bri = bound_brightness_LARD(model_bri, X, eps_list_brightness[i], method=method.split()[0])
-                    end_perturbation = time.time()
-                    st_computed_ious = time.time()
-                    
+                    input_whitenoise = bound_whitenoise_input(torch_model, X, eps_list_whitenoise[i], method=method.split()[0])
+                    input_brightness = bound_brightness_LARD_input(torch_model, X, eps_list_whitenoise[i], method=method.split()[0])
+
                     
                     # CGT
                     X_lirpa = X.float().to('cpu')
@@ -126,6 +127,18 @@ def main():
                     bounded_inputs = BoundedTensor(X_lirpa, ptb) 
                     lb_CGT, ub_CGT = ibp_net(method_opt="compute_bounds", x=(bounded_inputs,), method=method.split()[0])
                     pertubations_values["CGT_brightness"] = [eps_list_brightness[i]]*len(eps_list_whitenoise)
+                    
+                    if torch.all(bounded_inputs == input_whitenoise):
+                         print("CGT is equal to input_whitenoise")
+                    else:
+                         print("CGT is NOT equal to input_whitenoise")
+
+                    if torch.all(bounded_inputs == input_brightness):
+                         print("CGT is equal to brightness")
+                    else:
+                         print("CGT is NOT equal to brightness ")
+                    
+                    exit()
 
                     # CGT not clamp
                     X_lirpa = X.float().to('cpu')
