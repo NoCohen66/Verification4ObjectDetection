@@ -11,6 +11,16 @@ def bound_whitenoise(model_box, X, eps, method='crown'):
     X_lirpa = X.float().to('cpu')
     model_lirpa_corner = BoundedModule(model_box, X_lirpa)
     ptb = PerturbationLpNorm(norm=np.inf, eps=eps)
+    print("whitenoise", ptb)
+    input_lirpa = BoundedTensor(X_lirpa, ptb)
+    lb_box, ub_box = model_lirpa_corner.compute_bounds(x=(input_lirpa,),method=method)
+    return lb_box.detach().numpy()[0], ub_box.detach().numpy()[0]
+
+def bound_whitenoise_xLxU(model_box, X, inputs_L,inputs_U,  method='crown'):
+    X_lirpa = X.float().to('cpu')
+    model_lirpa_corner = BoundedModule(model_box, X_lirpa)
+    ptb = PerturbationLpNorm(norm=np.inf, x_L=inputs_L, x_U=inputs_U)
+    print("whitenoise_xLxU", ptb)
     input_lirpa = BoundedTensor(X_lirpa, ptb)
     lb_box, ub_box = model_lirpa_corner.compute_bounds(x=(input_lirpa,),method=method)
     return lb_box.detach().numpy()[0], ub_box.detach().numpy()[0]
