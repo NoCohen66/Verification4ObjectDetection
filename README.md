@@ -49,7 +49,7 @@ Comparisons against a baseline (Vanilla IBP IoU) highlight the superior performa
 3. `iou_calculator/`: Contains propagation effect on the IoU (step 2: **IBP IoU**).
 
 <div align="center">
-    <img src="results/images/schema_repo.png" width="100%" alt="overview_IBP_IoU_approach" align="center" />
+    <img src="results/images/structure_code.png" width="100%" alt="overview_IBP_IoU_approach" align="center" />
 </div>
 
 ## Requirements
