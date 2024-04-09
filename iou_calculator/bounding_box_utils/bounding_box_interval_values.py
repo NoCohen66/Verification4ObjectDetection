@@ -1,5 +1,5 @@
-from iou_calculator.Interval import Interval
-from iou_calculator.Hyperrectangle import Hyperrectangle
+from iou_calculator.bounding_box_utils.interval import Interval
+from iou_calculator.bounding_box_utils.bounding_box import Hyperrectangle
 import pandas as pd
 import plotly.graph_objects as go
 

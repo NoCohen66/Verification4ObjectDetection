@@ -1,4 +1,4 @@
-from ..Interval import Interval 
+from ..bounding_boxes_utils.interval import Interval 
 import unittest
 
 class TestInterval(unittest.TestCase):

@@ -2,9 +2,9 @@ from solver.model.LARD.LARD import Neural_network_LARD, Neural_network_LARD_Brig
 from solver.data.d_loc.custom_from_MNIST import CustomMnistDataset_OL
 from solver.model.d_loc.d_loc import NeuralNetwork_OL_v2, NeuralNetwork_BrightnessContrast
 from solver.perturbation import bound_whitenoise, bound_brightness, bound_contrast, bound_brightness_LARD, bound_contrast_LARD
-from iou_calculator.Hyperrectangle_interval import Hyperrectangle_interval
-from iou_calculator.Hyperrectangle import Hyperrectangle
-from iou_calculator.Interval import Interval
+from iou_calculator.bounding_box_utils.bounding_box_interval_values import Hyperrectangle_interval
+from iou_calculator.bounding_box_utils.bounding_box import Hyperrectangle
+from iou_calculator.bounding_box_utils.interval import Interval
 from iou_calculator.IoU import IoU
 from iou_calculator.utils import Merge, clip_corner
 from IPython.display import display
@@ -22,16 +22,16 @@ parser = argparse.ArgumentParser(description="Process some datasets and networks
 
 parser.add_argument('-d', '--dataset_model', default="LARD", help="The dataset and model to use.")
 parser.add_argument('-w', '--eps_list_whitenoise', default= np.linspace(0, 0.002,10), help="Range of variation for whitenoise perturbation.")
-parser.add_argument('-b','--eps_list_brightness', default= np.linspace(0, 0.002,10), help="Range of variation for brightness perturbation.")
-parser.add_argument('-c','--eps_list_contrast', default= np.linspace(0, 0.01,10), help="Range of variation for contrast perturbation.")
-parser.add_argument('-m','--methods_list', nargs="+", default=['IBP', 'IBP+backward (CROWN-IBP)', 'backward (CROWN)'], help="Methods use to compute bounds.")
+parser.add_argument('-b', '--eps_list_brightness', default= np.linspace(0, 0.002,10), help="Range of variation for brightness perturbation.")
+parser.add_argument('-c', '--eps_list_contrast', default= np.linspace(0, 0.01,10), help="Range of variation for contrast perturbation.")
+parser.add_argument('-m', '--methods_list', nargs="+", default=['IBP', 'IBP+backward (CROWN-IBP)', 'backward (CROWN)'], help="Methods use to compute bounds.")
 parser.add_argument('-nb','--nb_images', default=40, help="Quantity of images to be processed.")
 
-parser.add_argument('--d_loc_model_corner_filename', default='solver/model/d_loc/weights', help="Location of the regression model trained using the d_loc dataset.")
+parser.add_argument('--d_loc_model_weights', default='solver/model/d_loc/weights', help="Location of the regression model trained using the d_loc dataset.")
 parser.add_argument('--d_loc_dataset', default="solver/data/d_loc/test.csv", help="Location of the d_loc test dataset.")
 parser.add_argument('--d_loc_results_path', default='results/d_loc', help="Directory for storing the d_loc results.")
 
-parser.add_argument('--LARD_model_torch_load_filename', default='solver/model/LARD/weights', help="Location of the object detection model trained using the LARD dataset.")
+parser.add_argument('--LARD_model_weights', default='solver/model/LARD/weights', help="Location of the object detection model trained using the LARD dataset.")
 parser.add_argument('--LARD_dataset', default='solver/data/LARD/test.pkl', help="Location of the LARD test dataset.")
 parser.add_argument('--LARD_results_path', default='results/LARD', help="Directory for storing the LARD results.")
 args = parser.parse_args()
@@ -50,7 +50,7 @@ def main():
 
     if args.dataset_model == "d_loc":
 
-        model_torch_load  = torch.jit.load(f'{args.d_loc_model_corner_filename}.pt')
+        model_torch_load  = torch.jit.load(f'{args.d_loc_model_weights}.pt')
         model_box = NeuralNetwork_OL_v2(classif=False)
         model_box.load_state_dict(model_torch_load.state_dict())
 
@@ -147,7 +147,7 @@ def main():
 
     elif args.dataset_model == "LARD": 
         device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
-        model_torch_load  = torch.load(f'{args.LARD_model_torch_load_filename}.pt', torch.device('cpu')) # change if GPU
+        model_torch_load  = torch.load(f'{args.LARD_model_weights}.pt', torch.device('cpu')) # change if GPU
         torch_model = Neural_network_LARD()
         dict_val = {}
         for name, param in zip(torch_model.state_dict().keys(),
