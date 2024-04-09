@@ -72,7 +72,15 @@ class IoU:
                 return("case C")
 
             
-        return(df)
+    def iou_simple(self):
+        if self.hyperrect_interval.min_hyperrect().dict()==self.hyperrect_interval.max_hyperrect().dict():
+            box = self.hyperrect_interval.min_hyperrect()
+            overlap = box.overlap(self.hyperrect)
+            return(overlap/(box.area()+ self.hyperrect.area()-overlap))
+
+
+        else: 
+            raise ValueError("The predicted box have coordinates within an interval, you cannot use simple iou.")
   
     def create_interval(self,value1, value2): 
         if value2 >= value1:
@@ -236,6 +244,7 @@ class IoU:
         A_overlap = self.overlap_reluval()
         
         return(A_p + A_gt - A_overlap)
+    
 
     def iou_optim_max(self, display = False):
         # optim IBP

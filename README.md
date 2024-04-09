@@ -89,3 +89,6 @@ This project is licensed under the GNU Lesser General Public License v3.0 - see 
 
 For more information on the GNU LGPL v3, please visit [LGPL-3.0.html](https://www.gnu.org/licenses/lgpl-3.0.html).
 
+## Authors
+
+This project is a joint research work from ONERA and AIRBUS. 
