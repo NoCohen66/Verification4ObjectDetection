@@ -41,13 +41,21 @@ Comparisons against a baseline (Vanilla IBP IoU) highlight the superior performa
 
  <br />
 
+ ## 🧑‍🔬 Tutorial 
+
+For a hands-on learning experience, a tutorial is available as Jupyter notebooks in `tutorial`!
+
+
 ## Software implementation
 
 
 1. `main.py`: Main script to compute IBP IoU.
-3. `detection/`: Contains trained networks, datasets, and algorithms for perturbation **(brightness, contrast, white-noise)** on the input with [Auto-LIRPA](https://github.com/Verified-Intelligence/auto_LiRPA) (step 1: **solver**).
+3. `solver/`: Contains trained networks, datasets, and algorithms for perturbation **(brightness, contrast, white-noise)** on the input with [Auto-LIRPA](https://github.com/Verified-Intelligence/auto_LiRPA) (step 1).
 3. `iou_calculator/`: Contains propagation effect on the IoU (step 2: **IBP IoU**).
 
+<div align="center">
+    <img src="results/images/structure_code.png" width="100%" alt="overview_IBP_IoU_approach" align="center" />
+</div>
 
 ## Requirements
 
@@ -86,3 +94,6 @@ This project is licensed under the GNU Lesser General Public License v3.0 - see 
 
 For more information on the GNU LGPL v3, please visit [LGPL-3.0.html](https://www.gnu.org/licenses/lgpl-3.0.html).
 
+## Authors
+
+This project is a joint research work from ONERA and AIRBUS. 
