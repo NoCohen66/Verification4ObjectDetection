@@ -41,6 +41,11 @@ Comparisons against a baseline (Vanilla IBP IoU) highlight the superior performa
 
  <br />
 
+ ## 🧑‍🔬 Tutorial 
+
+For a hands-on learning experience, a tutorial is available as Jupyter notebooks in `tutorial`!
+
+
 ## Software implementation
 
 
