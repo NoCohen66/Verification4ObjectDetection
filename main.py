@@ -59,7 +59,7 @@ def main():
         '''
         To apply brightness and contrast perturbations effectively, we utilize the perturbation coefficient, alpha. 
         For brightness adjustments, alpha is added, and for contrast, it is multiplied.
-        The tool auto-lirpa is particularly compatible with neural networks designed to take alpha as the sole input during their forward operation. 
+        The tool auto-lirpa is not compatible with neural networks designed to take alpha as the single input during their forward operation (usually design to take an image as input)
         To accommodate this, we have developed a neural network that depends on the image and includes a linear layer. 
         This layer is responsible for performing either the addition or multiplication of the image with alpha as the input.
         '''
