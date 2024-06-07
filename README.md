@@ -28,9 +28,9 @@ We introduce a novel Interval Bound Propagation (IBP) approach for the formal ve
 The approach is compatible with popular abstract interpretation based verification tools.
 The resulting verifier is evaluated on:
 * [LARD 🐷](https://github.com/deel-ai/LARD) landing approach runway detection 
-* [MNIST-objectdetection](https://github.com/hukkelas/MNIST-ObjectDetection) handwritten digit recognition case studies
+* [DIGIT LOC](https://github.com/hukkelas/MNIST-ObjectDetection) handwritten digit recognition case studies
 
-Comparisons against a baseline (Vanilla IBP IoU) highlight the superior performance of Optimal IBP IoU in ensuring accuracy and stability, contributing to more secure and robust machine learning applications. 
+Comparisons against a baseline (Vanilla IBP IoU) highlight the superior performance of Optimal IBP IoU in ensuring robustness, contributing to more secure machine learning applications. 
 
 
 <div align="center">
