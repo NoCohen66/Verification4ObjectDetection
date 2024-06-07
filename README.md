@@ -8,7 +8,7 @@
 ## IBP IoU an approach for the formal verificaion of object detection models.
 
 
-To verify stability, we need to rely on the
+To verify robustness, we need to rely on the
 *Intersection over Union* [(IoU)](https://en.wikipedia.org/wiki/Jaccard_index), a common metric for evaluating the performance of object detection. 
 
 
