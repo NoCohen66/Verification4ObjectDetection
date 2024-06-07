@@ -17,18 +17,27 @@ To verify stability, we need to rely on the
 *Intersection over Union* [(IoU)](https://en.wikipedia.org/wiki/Jaccard_index), a common metric for evaluating the performance of object detection. 
 
 
-<br>
-<!-- Badge section -->
-<!--<div align="center">
-    <a href="#">
-        <img src="https://img.shields.io/badge/Python-3.6, 3.7, 3.8-efefef">
-    </a>
-</div>-->
-<div align="center">
-    <img src="results/images/fig_impact.png" width="100%" alt=" Impact_of_a perturbation_on_the_object detection" align="center" />
-</div>
-<br>
+<br />
 
+<table>
+<tr>
+    <td width="50%">
+        <div align="center" style="border: 2px solid red; padding: 10px;">
+            <a href="https://www.youtube.com/watch?v=6g7_ShGuxVI">
+                <img src="https://img.shields.io/badge/YouTube-Watch-red.svg?style=for-the-badge&logo=youtube" alt="Watch the video">
+            </a>
+            <p><strong>Understand the context and the contribution in 20 min, or in X min if you're watching at 1.5x speed!</strong></p>
+        </div>
+    </td>
+    <td width="50%">
+        <div align="center">
+            <img src="results/images/screen_youtube.png" alt="YouTube Video Screenshot" />
+        </div>
+    </td>
+</tr>
+</table>
+
+<br />
 ## Abstract
 
 We introduce a novel Interval Bound Propagation (IBP) approach for the formal verification of object detection models, specifically targeting the Intersection over Union (IoU) metric.
