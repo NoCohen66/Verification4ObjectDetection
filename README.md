@@ -3,12 +3,7 @@
 
 ![Licence](https://img.shields.io/github/license/NoCohen66/Verification4ObjectDetection)
 
-<div align="center" style="border: 2px solid red; padding: 10px;">
-    <a href="https://www.youtube.com/watch?v=6g7_ShGuxVI">
-        <img src="https://img.shields.io/badge/YouTube-Watch-red.svg?style=for-the-badge&logo=youtube" alt="Watch the video">
-    </a>
-    <p><strong>Understand the context and the contribution in 20 min, or in 15 min if you're watching at 1.5x speed!</strong></p>
-</div>
+
 
 ## IBP IoU an approach for the formal verificaion of object detection models.
 
@@ -38,6 +33,7 @@ To verify stability, we need to rely on the
 </table>
 
 <br />
+
 ## Abstract
 
 We introduce a novel Interval Bound Propagation (IBP) approach for the formal verification of object detection models, specifically targeting the Intersection over Union (IoU) metric.
